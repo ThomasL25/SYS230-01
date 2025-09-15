@@ -1,4 +1,4 @@
-# Script file for Function and Event Logs Assignment 
+﻿# Script file for Function and Event Logs Assignment 
 
 # Function purpose is to find information based on shutdowns and stars in a certain time period from running
 # Function takes in a single number that represents the amount of days prior should the function check for shutdowns/starts
@@ -52,11 +52,13 @@ $userSID = New-Object System.Security.Principal.SecurityIdentifier($loginouts[$i
 $user = $userSID.Translate([System.Security.Principal.NTAccount])
 
 # Add each new line with custom objects inside the array
-$loginoutsTable += [pscustomobject]@{“Time” = $loginouts[$i].TimeGenerated; `
-               			       “Id” = $loginouts[$i].InstanceId; `
-                                    “Event” = $event; `
-                                     “User” = $user;
-                                     }
+$loginoutsTable += [pscustomobject]@{
+    Time  = $loginouts[$i].TimeGenerated
+    Id    = $loginouts[$i].InstanceId
+    Event = $event
+    User  = $user
+}
+                                     
 } # End of loop and display table
 $loginoutsTable
 
