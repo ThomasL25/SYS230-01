@@ -1,4 +1,4 @@
-﻿. (Join-Path $PSScriptRoot Users.ps1)
+. (Join-Path $PSScriptRoot Users.ps1)
 . (Join-Path $PSScriptRoot Event-Logs.ps1)
 
 clear

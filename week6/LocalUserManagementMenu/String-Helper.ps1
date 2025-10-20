@@ -1,4 +1,4 @@
-﻿<# String-Helper
+<# String-Helper
 *************************************************************
    This script contains functions that help with String/Match/Search
    operations. 

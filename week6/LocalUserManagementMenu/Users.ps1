@@ -1,4 +1,4 @@
-﻿
+
 
 <# ******************************
 # Create a function that returns a list of NAMEs AND SIDs only for enabled users
