@@ -64,3 +64,12 @@ function getFailedLogins($timeBack){
 
     return $failedloginsTable
 } # End of function getFailedLogins
+
+
+
+function atRiskUsers ($days) {
+   $failedLogins = getFailedLogins $days
+    
+   $atRiskUsers = $failedLogins | Group-Object -Property User | Where-Object { $_.Count -gt 10 }
+   Write-Host ($atRiskUsers | Select-Object Name, Count | Format-Table | Out-String)
+}
