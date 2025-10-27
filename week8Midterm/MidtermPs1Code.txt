@@ -1,0 +1,67 @@
+function Get-IOC {
+    $url = "http://10.0.17.47/IOC.html"
+    $webpage = Invoke-WebRequest -Uri $url
+    $iocs = $webpage.ParsedHtml.getElementsByTagName('tr') | 
+        Select-Object -Skip 1 | 
+        ForEach-Object {
+            $cells = $_.getElementsByTagName('td')
+            [PSCustomObject]@{
+                Pattern = $cells[0].innerText
+                Description = $cells[1].innerText
+            }
+        }
+    return $iocs
+}
+
+$iocs = Get-IOC
+$iocs | Format-Table -AutoSize
+
+--------------------------------------------------------------------------
+
+function Get-ApacheLogs {
+    $logPath = "C:\Users\champuser\SYS230-01\week8Midterm\access.log" 
+    $logs = Get-Content $logPath
+    $parsedLogs = $logs | ForEach-Object {
+        $parts = $_ -split ' '
+        
+        [PSCustomObject]@{
+            IP       = $parts[0]
+            Time     = $parts[3] -replace '\[', ''
+            Method   = $parts[5] -replace '"', ''
+            Page     = $parts[6]
+            Protocol = $parts[7] -replace '"', ''
+            Response = $parts[8]
+            Referrer = '"-"'
+        }
+    }
+    return $parsedLogs
+}
+
+$parsedLogs = Get-ApacheLogs
+$parsedLogs | Format-Table -AutoSize
+
+------------------------------------------------------------------------
+
+function Get-MatchedLogs {
+    param(
+        $logs,
+        $iocs
+    )
+    $matchedLogs = $logs | Where-Object {
+        $page = $_.Page
+        $match = $false
+        foreach ($ioc in $iocs) {
+            if ($page -like "*$($ioc.Pattern)*") {
+                $match = $true
+                break
+            }
+        }
+        $match
+    }
+    return $matchedLogs
+}
+
+$iocs = Get-IOC
+$logs = Get-ApacheLogs
+$matched = Get-MatchedLogs -logs $logs -iocs $iocs
+$matched | Format-Table -AutoSize
