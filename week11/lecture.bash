@@ -12,9 +12,12 @@ function ips(){
 }
 
 function pageCount(){
-    pagesAccessed=$(grep -oP '\"GET \K[^ ]+' "$file" | sort | uniq -c)
+    pagesAccessed=$(grep -oP '"GET \K[^ ]+' "$file" | sort | uniq -c)
 }
 
-getAllLogs
-pageCount
-echo "$pagesAccessed"
+function countingCurlAccess(){
+    curlAccess=$(grep -i "curl" "$file" | awk '{print $1, $NF}' | sort | uniq -c)
+}
+
+countingCurlAccess
+echo "$curlAccess"
